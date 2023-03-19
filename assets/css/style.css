@@ -1,0 +1,97 @@
+:root {
+    --button-font-size: calc(14px + (24 - 14) * ((100vw - 300px) / (1600 - 300)));
+    --bg-color: rgb(64, 167, 222);
+    --bg-border: rgb(30, 151, 216);
+    --text-shadow: rgb(23, 86, 120);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    justify-content: space-between;
+    box-sizing: border-box;
+    font-size: calc(20px + (34 - 20) * ((100vw - 300px) / (1600 - 300)));
+}
+
+header, footer {
+    
+    background-color: var(--bg-color);
+}
+
+header {
+    padding: 1%;
+    display: flex;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    letter-spacing: 0.1rem;
+    border-bottom: solid 1px var(--bg-border);
+    text-shadow: 0px 0px 2px black;
+}
+
+/* main starts here */
+
+main {
+    height: 100%;
+    background-image: linear-gradient(to right bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.0)),  url('../img/sky-background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+   
+}
+
+aside {
+    width: 25%;
+    margin: 2% 2%;
+    padding-left: 2%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+label {
+    color: white;
+    font-weight: 700;
+    text-shadow: 0 0 3px var(--text-shadow);
+}
+
+input {
+    padding: 2% 2% 2% 7%;
+    width: 90%;
+    margin: 3%;
+    border-radius: 10px;
+    font-size: var(--button-font-size);
+    border: solid 2px var(--bg-border);
+    
+}
+
+#search-btn {
+    width: 100%;
+    padding: 2% 2%;
+    margin: 3%;
+    border-radius: 10px;
+    font-size: var(--button-font-size);
+    background-color: var(--bg-color);
+    border: solid 2px var(--bg-border);
+    color: white;
+    letter-spacing: 0.1rem;
+    text-shadow: 0 0 2px var(--text-shadow);
+}
+
+
+/* main ends here */
+
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: solid 1px var(--bg-border);
+}
+
+footer a img {
+    display: block;
+    width: 72%;
+    margin: 3px;
+}
