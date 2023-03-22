@@ -16,17 +16,14 @@ searchBtnEl.click(function(event) {
     .then(data => {
         const lat = data[0].lat;
         const lon = data[0].lon;
-        const cityName = data[0].name;
-
-        getCurrentWeather(lat, lon);
-        saveSearchHistory(cityName, lat, lon)
         
-        })
+        getCurrentWeather(lat, lon);
+    })
 })
 
 // function to retrieve the current weather data
 const getCurrentWeather = (lat, lon) => {
-
+    
     $("#left-side").text('');
     $("#current-weather-values").text('');
     
@@ -34,7 +31,10 @@ const getCurrentWeather = (lat, lon) => {
     .then(response => response.json())
     .then(data => {
         console.log(data)
-        $("#left-side").append(`<li id="city-name">${data.name}, ${data.sys.country}</li>`); // city name
+        const cityName = data.name;
+        const country = data.sys.country;
+        
+        $("#left-side").append(`<li id="city-name">${cityName}, ${country}</li>`); // city name, country code
         $('#left-side').append(`<li id="weather-condition">${data.weather[0].main}</li>`); // weather condition (clouds/rainy etc)
         $('<img>', {
             src: `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`, // weather icon
@@ -46,8 +46,9 @@ const getCurrentWeather = (lat, lon) => {
         $('#current-weather-values').append(`<li>temp: <span class="weather-value">${data.main.temp} &#8457;</span></li>`); // current temperature
         $('#current-weather-values').append(`<li>wind: <span class="weather-value">${data.wind.speed} mph</span></span></li>`); // current wind speed 
         $('#current-weather-values').append(`<li>humidity: <span class="weather-value">${data.main.humidity}%</span></li>`); // current humidity
-        console.log(data.main.temp_min)
-        console.log(data.main.temp_max)
+        
+        
+        saveSearchHistory(cityName, country, lat, lon)        
     });
     
     getForecast(lat, lon)
@@ -86,3 +87,28 @@ const getForecast = (lat, lon) => {
 }
 
 
+// function that stores search history in the local storage.
+const saveSearchHistory = (cityName, country, lat, lon) => {
+    const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+
+    // an object containing the current city search.
+    let newSearchItem = {
+        cityName: `${cityName}`,
+        country: `${country}`,
+        lat: lat,
+        lon: lon,
+    };
+
+    // an if-statement that verifies whether the current search city already exists in the localStorage and prevents it from being duplicated.
+    if (searchHistory.length > 0) {
+        for (let i = 0; i < searchHistory.length; i++) {
+            if (searchHistory[i].lat == newSearchItem.lat) {
+                return;
+            }
+        }
+    };
+
+    searchHistory.push(newSearchItem);
+
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+}

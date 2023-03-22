@@ -21,8 +21,6 @@ header, footer {
     background-color: var(--bg-color);
 }
 
-
-
 header {
     padding: 1%;
     display: flex;
@@ -92,6 +90,7 @@ input {
 
 /* aside ends here */
 
+
 /* weather container starts here */
 
 #weather-container {
@@ -116,7 +115,6 @@ input {
     justify-content: space-between;
     height: 50%;
     line-height: 2rem;
-
 }
 
 #weather-condition {
@@ -153,6 +151,11 @@ ul {
 
 .forecast-item {
     font-size: calc(10px + (20 - 10) * ((100vw - 300px) / (1600 - 300)));
+}
+
+img {
+    background-color: rgba(241, 241, 241, 0.5);
+    border-radius: 30px;
 }
 
 
