@@ -14,10 +14,21 @@
     </header>
     <main>
         <aside>
-            <label for="search-input"><span>S</span>earch for a City</label>
+            <label for="search-input">Search Global Weather</label>
             <input type="text" id="search-input" placeholder="type city name" size="20">
             <button id="search-btn">Search</button>
         </aside>
+        <section id="weather-container">
+            <div id="current-weather-container">
+                <ul id="left-side"></ul>
+                <div id="right-side">
+                    <ul id="current-weather-values"></ul>
+                </div>
+            </div>
+            <div id="forecast-container">
+                
+            </div>
+        </section>
     </main>
     <footer>
         <a href="https://github.com/UserOlena" target="_blank">
@@ -25,6 +36,7 @@
         </a>
     </footer> 
 
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.7/dayjs.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="./assets/js/private.js"></script>
     <script src="./assets/js/script.js"></script>
