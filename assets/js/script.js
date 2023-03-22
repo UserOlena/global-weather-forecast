@@ -37,6 +37,7 @@ const getCurrentWeather = (lat, lon) => {
         $("#left-side").append(`<li id="city-name">${cityName}, ${country}</li>`); // city name, country code
         $('#left-side').append(`<li id="weather-condition">${data.weather[0].main}</li>`); // weather condition (clouds/rainy etc)
         $('<img>', {
+            class: 'weather-icon',
             src: `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`, // weather icon
             alt: 'weather image'
         }).appendTo('#left-side')
@@ -76,7 +77,7 @@ const getForecast = (lat, lon) => {
             }).appendTo('#forecast-container');
 
             $(`#index-${i}`).append(`<li class="week-day">${dayOfWeek}</li>`);
-            $(`#index-${i}`).append(`<li class="forecast-item"><img src="${weatherIcon}" alt="weather image"></li>`);
+            $(`#index-${i}`).append(`<li class="forecast-item"><img class="weather-icon" src="${weatherIcon}" alt="weather image"></li>`);
             $(`#index-${i}`).append(`<li class="forecast-item">temp: <span class="weather-value">${data.list[i].main.temp} &#8457;</span></li>`);
             $(`#index-${i}`).append(`<li class="forecast-item">wind: <span class="weather-value">${data.list[i].wind.speed} mph</span></span></li>`);
             $(`#index-${i}`).append(`<li class="forecast-item">humidity: <span class="weather-value">${data.list[i].main.humidity}%</span></li>`);
