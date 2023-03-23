@@ -153,9 +153,17 @@ ul {
     font-size: calc(10px + (20 - 10) * ((100vw - 300px) / (1600 - 300)));
 }
 
-img {
+.weather-icon {
     background-color: rgba(241, 241, 241, 0.5);
     border-radius: 30px;
+}
+
+#git-icon {
+    transition: transform .5s ease-out; 
+}
+
+#git-icon:hover {
+    transform:rotate(360deg)
 }
 
 
