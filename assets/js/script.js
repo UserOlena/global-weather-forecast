@@ -9,17 +9,29 @@ searchBtnEl.click(function(event) {
     
     searchInputEl = $('#search-input').val(); // retrieve the input value that has been entered into the search field
     
-    event.preventDefault()
-    // API to get the lat and lon values based on the entered city
-    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchInputEl}&limit=1&appid=${openWeatherMapApi}`) 
-    .then(response => response.json())
-    .then(data => {
-        const lat = data[0].lat;
-        const lon = data[0].lon;
-        
-        getCurrentWeather(lat, lon);
-    })
-})
+    if (!searchInputEl) {
+        event.preventDefault();
+        modalMessage('empty input value')
+    } else {
+        event.preventDefault();
+        // API to get the lat and lon values based on the entered city
+        fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchInputEl}&limit=1&appid=${openWeatherMapApi}`) 
+        .then(response => response.json())
+        .then(data => {
+            if (data.length < 1) {
+                console.log('data is undefined')
+                modalMessage('wrong city name');
+            } else {
+                const lat = data[0].lat;
+                const lon = data[0].lon;
+
+                getCurrentWeather(lat, lon);
+            }       
+    
+        })
+    }
+
+});
 
 // function to retrieve the current weather data
 const getCurrentWeather = (lat, lon) => {
@@ -112,4 +124,39 @@ const saveSearchHistory = (cityName, country, lat, lon) => {
     searchHistory.push(newSearchItem);
 
     localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+}
+
+// Display modal alert message
+function modalMessage(problemType) {
+    
+    const modalContainer = document.createElement('dialog');
+    modalContainer.setAttribute('id', 'modal-box');
+    
+    const emoji = document.createElement('img');
+    emoji.setAttribute('id', 'modal-emoji');
+    emoji.setAttribute('src', './assets/img/emoji-idk.png');
+    emoji.setAttribute('alt', "I don't know emoji");
+    
+    const modalMessage = document.createElement('h3');
+
+    if (problemType === 'wrong city name') {
+        modalMessage.textContent = 'Sorry, we could not locate the requested city. Please ensure that you have entered the correct city name.'; 
+    } else if (problemType === 'empty input value') {
+        modalMessage.textContent = 'The input field must not be left empty. Please enter a city name.';    
+    }
+    
+    const modalCloseBtn = document.createElement('button');
+    modalCloseBtn.setAttribute('id', 'modal-close-btn');
+    modalCloseBtn.textContent = 'dismiss';
+    
+    modalContainer.append(emoji, modalMessage, modalCloseBtn);
+    document.querySelector('body').appendChild(modalContainer);
+    
+    modalContainer.showModal();
+
+    // Hides modal alert on click "dismiss" button
+    modalCloseBtn.addEventListener('click', function() {
+      
+        modalContainer.close()
+    })
 }

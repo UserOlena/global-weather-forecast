@@ -1,6 +1,7 @@
 :root {
     --button-font-size: calc(14px + (24 - 14) * ((100vw - 300px) / (1600 - 300)));
-    --bg-color: #091d34cd;
+    --bg-color: #063456ce;
+    /* #091d34cd; */
     --bg-border: rgb(3, 13, 18);
     --text-shadow: rgb(23, 86, 120);
     --weather-param-fs: calc(14px + (24 - 14) * ((100vw - 300px) / (1600 - 300)));
@@ -163,7 +164,7 @@ ul {
 }
 
 #git-icon:hover {
-    transform:rotate(360deg)
+    transform: rotate(360deg);
 }
 
 
@@ -171,6 +172,49 @@ ul {
 
 
 /* main ends here */
+
+
+/* modal starts here */
+
+#modal-box {
+    display: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 4%;
+    border-radius: 10px;
+    border: solid 4px rgb(247, 113, 29);
+    z-index: 2;
+    text-align: center;
+}
+
+#modal-emoji {
+    width: 30%;
+    margin: auto;
+    margin-bottom: 5%;
+}
+
+#modal-box h3 {
+    font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300))); 
+    line-height: 130%;
+}
+
+#modal-close-btn {
+    padding: 2% 5%;
+    border: solid 2px rgb(247, 160, 29);
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    margin-top: 5%;
+    color: white;
+    font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300))); 
+    margin-top: 5%;
+}
+
+#modal-close-btn:hover {
+    background-color: #2a7daa;
+}
+  
+/* end of modal-box styling */
 
 
 footer {
