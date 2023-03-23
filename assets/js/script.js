@@ -3,7 +3,6 @@ const searchBtnEl = $('#search-btn'); // reference to the "search" button elemen
 const historyBoxEl = $('<div>').attr('id', 'history-btn-container');
 
 let searchInputEl = $('#search-input'); 
-searchInputEl.val('');
 
 // when the "search" button is clicked, call the function to obtain the latitude and longitude values for the selected city
 searchBtnEl.click(function(event) {
@@ -43,7 +42,6 @@ const getCurrentWeather = (lat, lon) => {
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${openWeatherMapApi}`)
     .then(response => response.json())
     .then(data => {
-        console.log(data)
         const cityName = data.name;
         const country = data.sys.country;
         
@@ -103,6 +101,7 @@ const getForecast = (lat, lon) => {
 
 // function that stores search history in the local storage.
 const saveSearchHistory = (cityName, country, lat, lon) => {
+
     const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
 
     // an object containing the current city search.
@@ -113,19 +112,31 @@ const saveSearchHistory = (cityName, country, lat, lon) => {
         lon: lon,
     };
 
-    // an if-statement that verifies whether the current search city already exists in the localStorage and prevents it from being duplicated.
+    // To limit the array of objects to a maximum of 10 items, an if-statement has been added to remove the last items until there are only 9 remaining. 
+    // The new city is added to the beginning of the array using the unshift() method below, becoming the 10th and most recent item.
+    if (searchHistory.length >= 10) {
+        console.log(searchHistory.length)
+        while (searchHistory.length > 9) {
+            searchHistory.pop();
+            console.log(searchHistory.length)
+        }   
+    }
+
+    // an if-statement that verifies whether the current search city already exists in the localStorage and prevents it from being duplicated
     if (searchHistory.length > 0) {
         for (let i = 0; i < searchHistory.length; i++) {
-            if (searchHistory[i].lat == newSearchItem.lat) {
+            if (searchHistory[i].cityName == newSearchItem.cityName) {
                 return;
             }
         }
-    };
-
-    searchHistory.push(newSearchItem);
-
+    }
+    
+    searchHistory.unshift(newSearchItem);
     localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+
+    displayHistorySearch();
 }
+
 
 // Display modal alert message
 function modalMessage(problemType) {
@@ -164,7 +175,10 @@ function modalMessage(problemType) {
 
 // function retrieves the search history from local storage and displays the stored data below the input field.
 const displayHistorySearch = () => {
-    
+
+    historyBoxEl.text(''); // ensures that buttons are not dublicated.
+    $('#search-input').val(''); // erases the input field's contents.
+
     const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
 
     searchHistory.forEach(function(element) {
