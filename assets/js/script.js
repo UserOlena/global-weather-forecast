@@ -186,16 +186,21 @@ historyBoxEl.click(function (event) {
     const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
     
     let chosenButtonTextContent = event.target.textContent;
-    console.log(chosenButtonTextContent);
 
-    // the function determines the index of an object in the local storage 
-    // by using the selected button and the text content of its associated city name.
-    let cityIndex = searchHistory.findIndex(element => 
-        element.cityName === chosenButtonTextContent);
-    let cityLat = searchHistory[cityIndex].lat;
-    let cityLon = searchHistory[cityIndex].lon;
+    if (event.target.getAttribute('class') !== 'history-btn') {
+        return
+    } else {
+        console.log(chosenButtonTextContent);
+    
+        // the function determines the index of an object in the local storage 
+        // by using the selected button and the text content of its associated city name.
+        let cityIndex = searchHistory.findIndex(element => element.cityName === chosenButtonTextContent);
 
-    getCurrentWeather(cityLat, cityLon);
+        let cityLat = searchHistory[cityIndex].lat;
+        let cityLon = searchHistory[cityIndex].lon;
+    
+        getCurrentWeather(cityLat, cityLon);
+    }
 })
 
 displayHistorySearch()
