@@ -1,5 +1,6 @@
 const date = dayjs().format('ddd, MMM D, YYYY H:mm A');
 const searchBtnEl = $('#search-btn'); // reference to the "search" button element
+const historyBoxEl = $('<div>').attr('id', 'history-btn-container');
 
 let searchInputEl = $('#search-input'); 
 searchInputEl.val('');
@@ -163,18 +164,42 @@ function modalMessage(problemType) {
 
 // function retrieves the search history from local storage and displays the stored data below the input field.
 const displayHistorySearch = () => {
-
+    
     const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
 
     searchHistory.forEach(function(element) {
-        console.log(element.cityName);
 
-        let historyBtn = $('<button>').attr('class', 'history-btn');
+        historyBtn = $('<button>').attr('class', 'history-btn');
         historyBtn.text(element.cityName);
-        $('aside').append(historyBtn);
-
+        historyBoxEl.append(historyBtn);
+        
     });
-  
+    
+    $('aside').append(historyBoxEl);
 }
 
+
+// The event listener captures the selected button and its city name text content, 
+// and subsequently passes latitude and longitude values corresponding to the chosen city name to the getCurrentWeather().
+historyBoxEl.click(function (event) {
+
+    const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+    
+    let chosenButtonTextContent = event.target.textContent;
+    console.log(chosenButtonTextContent);
+
+    // the function determines the index of an object in the local storage 
+    // by using the selected button and the text content of its associated city name.
+    let cityIndex = searchHistory.findIndex(element => 
+        element.cityName === chosenButtonTextContent);
+    let cityLat = searchHistory[cityIndex].lat;
+    let cityLon = searchHistory[cityIndex].lon;
+
+    getCurrentWeather(cityLat, cityLon);
+})
+
 displayHistorySearch()
+
+
+// checge push localstorage
+// call display history search when new search is implemented
