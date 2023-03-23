@@ -77,17 +77,24 @@ input {
     
 }
 
-#search-btn {
+#search-btn, .history-btn  {
     width: 100%;
     padding: 2% 2%;
     margin: 3%;
     border-radius: 10px;
     font-size: var(--button-font-size);
-    background-color: rgba(9, 29, 52, 0.803);
+    background-color: var(--bg-color);
     border: solid 2px var(--bg-border);
     color: white;
     letter-spacing: 0.1rem;
+    font-weight: 700;
 }
+
+.history-btn {
+    background: linear-gradient(to right top, rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.7));
+    text-shadow: 0 0 4px black;
+}
+
 
 /* aside ends here */
 
@@ -100,6 +107,7 @@ input {
     margin: auto 2%;
     padding: 2% 2% 5% 2%;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4));
+    border: solid 2px var(--bg-border);
     border-radius: 15px;
     color: white;
     font-size: var(--weather-param-fs);
@@ -167,9 +175,7 @@ ul {
     transform: rotate(360deg);
 }
 
-
 /* weather container ends here */
-
 
 /* main ends here */
 

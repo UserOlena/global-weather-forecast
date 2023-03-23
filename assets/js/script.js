@@ -160,3 +160,21 @@ function modalMessage(problemType) {
         modalContainer.close()
     })
 }
+
+// function retrieves the search history from local storage and displays the stored data below the input field.
+const displayHistorySearch = () => {
+
+    const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+
+    searchHistory.forEach(function(element) {
+        console.log(element.cityName);
+
+        let historyBtn = $('<button>').attr('class', 'history-btn');
+        historyBtn.text(element.cityName);
+        $('aside').append(historyBtn);
+
+    });
+  
+}
+
+displayHistorySearch()
