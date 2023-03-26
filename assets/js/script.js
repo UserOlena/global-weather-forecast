@@ -169,7 +169,7 @@ function modalMessage(problemType) {
     // Hides modal alert on click "dismiss" button
     modalCloseBtn.addEventListener('click', function() {
       
-        modalContainer.close()
+        modalContainer.remove()
     })
 }
 
