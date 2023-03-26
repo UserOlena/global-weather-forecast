@@ -103,7 +103,7 @@ const getForecast = (lat, lon) => {
 const saveSearchHistory = (cityName, country, lat, lon) => {
 
     const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-
+    
     // an object containing the current city search.
     let newSearchItem = {
         cityName: `${cityName}`,
@@ -112,30 +112,79 @@ const saveSearchHistory = (cityName, country, lat, lon) => {
         lon: lon,
     };
 
-    // To limit the array of objects to a maximum of 10 items, an if-statement has been added to remove the last items until there are only 9 remaining. 
-    // The new city is added to the beginning of the array using the unshift() method below, becoming the 10th and most recent item.
-    if (searchHistory.length >= 10) {
-        console.log(searchHistory.length)
-        while (searchHistory.length > 9) {
-            searchHistory.pop();
-            console.log(searchHistory.length)
-        }   
-    }
-
-    // an if-statement that verifies whether the current search city already exists in the localStorage and prevents it from being duplicated
+    // an if-statement that verifies whether the current search city already exists in the localStorage and removes it from the storage
     if (searchHistory.length > 0) {
         for (let i = 0; i < searchHistory.length; i++) {
-            if (searchHistory[i].cityName == newSearchItem.cityName) {
-                return;
+            if (searchHistory[i].lat == newSearchItem.lat) {
+                searchHistory.splice(i, 1);
             }
         }
-    }
-    
+    };
+
+    // The new city is added to the beginning of the array using the unshift() method below, becoming the most recent item.
     searchHistory.unshift(newSearchItem);
+
+    // To limit the array of objects to a maximum of 10 items, an if-statement has been added to remove the last items until there are only 10 remaining. 
+    while (searchHistory.length > 10) {
+        searchHistory.pop();
+    }   
+
     localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
 
+    removeHistoryButtons();
     displayHistorySearch();
-}
+};
+
+
+// The function clears all previously generated history buttons upon initiating a new city search in order to avoid the duplication of buttons.
+function removeHistoryButtons() {
+
+    $('#history-btn-container > .history-btn').remove();   
+};
+
+
+// function retrieves the search history from local storage and displays the stored data below the input field.
+const displayHistorySearch = () => {
+    
+    $('#search-input').val(''); // erases the input field's contents.
+    
+    const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+    
+    searchHistory.forEach(function(element) {
+        
+        historyBtn = $('<button>').attr('class', 'history-btn');
+        historyBtn.text(`${element.cityName}, ${element.country}`);
+        historyBoxEl.append(historyBtn);
+        
+    });
+    
+    $('aside').append(historyBoxEl);
+};
+
+
+// The event listener captures the selected button and its city name text content, 
+// and subsequently passes latitude and longitude values corresponding to the chosen city name to the getCurrentWeather().
+historyBoxEl.click(function (event) {
+    
+    const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+    
+    let chosenButtonTextContent = event.target.textContent;
+    
+    if (event.target.getAttribute('class') !== 'history-btn') {
+        return
+    } else {
+        console.log(chosenButtonTextContent);
+        
+        // the function determines the index of an object in the local storage 
+        // by using the selected button and the text content of its associated city name.
+        let cityIndex = searchHistory.findIndex(element => `${element.cityName}, ${element.country}` === chosenButtonTextContent);
+        
+        let cityLat = searchHistory[cityIndex].lat;
+        let cityLon = searchHistory[cityIndex].lon;
+        
+        getCurrentWeather(cityLat, cityLon);
+    }
+});
 
 
 // Display modal alert message
@@ -173,52 +222,8 @@ function modalMessage(problemType) {
     })
 }
 
-// function retrieves the search history from local storage and displays the stored data below the input field.
-const displayHistorySearch = () => {
-
-    historyBoxEl.text(''); // ensures that buttons are not dublicated.
-    $('#search-input').val(''); // erases the input field's contents.
-
-    const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-
-    searchHistory.forEach(function(element) {
-
-        historyBtn = $('<button>').attr('class', 'history-btn');
-        historyBtn.text(element.cityName);
-        historyBoxEl.append(historyBtn);
-        
-    });
-    
-    $('aside').append(historyBoxEl);
-}
-
-
-// The event listener captures the selected button and its city name text content, 
-// and subsequently passes latitude and longitude values corresponding to the chosen city name to the getCurrentWeather().
-historyBoxEl.click(function (event) {
-
-    const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-    
-    let chosenButtonTextContent = event.target.textContent;
-
-    if (event.target.getAttribute('class') !== 'history-btn') {
-        return
-    } else {
-        console.log(chosenButtonTextContent);
-    
-        // the function determines the index of an object in the local storage 
-        // by using the selected button and the text content of its associated city name.
-        let cityIndex = searchHistory.findIndex(element => element.cityName === chosenButtonTextContent);
-
-        let cityLat = searchHistory[cityIndex].lat;
-        let cityLon = searchHistory[cityIndex].lon;
-    
-        getCurrentWeather(cityLat, cityLon);
-    }
-})
 
 displayHistorySearch()
 
 
-// checge push localstorage
 // call display history search when new search is implemented
