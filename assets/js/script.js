@@ -79,7 +79,8 @@ const getForecast = (lat, lon) => {
             }).appendTo('#forecast-container');
 
             $(`#index-${i}`).append(`<li class="week-day">${dayOfWeek}</li>`);
-            $(`#index-${i}`).append(`<li class="forecast-item"><img class="weather-icon" src="./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}" alt="weather image"></li>`);
+            $(`#index-${i}`).append(`<li id="weather-condition">${data.list[i].weather[0].description}</li>`); // weather condition (cloudy/rainy etc)
+            $(`#index-${i}`).append(`<li class="forecast-icon-cont"><img class="forecast-weather-icon" src="./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}" alt="weather image"></li>`);
             $(`#index-${i}`).append(`<li class="forecast-item">Temp: <span class="weather-value">${data.list[i].main.temp} &#8457;</span></li>`);
             $(`#index-${i}`).append(`<li class="forecast-item">Wind: <span class="weather-value">${data.list[i].wind.speed} mph</span></span></li>`);
             $(`#index-${i}`).append(`<li class="forecast-item">Humidity: <span class="weather-value">${data.list[i].main.humidity}%</span></li>`);
@@ -104,10 +105,11 @@ const displayCurrentWeather = (data, cityName, country) => {
 
     console.log(objIndex)
 
-    $("#left-side").append(`<li id="city-name">${cityName}, ${country}</li>`); // city name, country code
-    $('#left-side').append(`<li id="weather-condition">${data.weather[0].description}</li>`); // weather condition (cloudy/rainy etc)
+    $("#left-side").append(`<ul id="left-side-title"></ul>`)
+    $("#left-side-title").append(`<li id="city-name">${cityName}, ${country}</li>`); // city name, country code
+    $('#left-side-title').append(`<li id="weather-condition">${data.weather[0].description}</li>`); // weather condition (cloudy/rainy etc)
     $('<img>', {
-        class: 'weather-icon',
+        id: 'current-weather-icon',
         src: `./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}`, // weather icon
         alt: 'weather image'
     }).appendTo('#left-side');

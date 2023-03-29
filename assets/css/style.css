@@ -102,9 +102,9 @@ input {
 
 #weather-container {
     width: 75%;
-    height: 75%;
+    height: 85%;
     margin: auto 2%;
-    padding: 2% 2% 5% 2%;
+    padding: 2%;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4));
     border: solid 2px var(--bg-border);
     border-radius: 15px;
@@ -112,8 +112,12 @@ input {
     font-size: var(--weather-param-fs);
 }
 
+#left-side {
+    width: 50%;
+}
+
 #city-name {
-    padding-top: 12%;
+    padding-top: 8%;
     font-size: calc(20px + (34 - 20) * ((100vw - 300px) / (1600 - 300)));
     color: white;
 }
@@ -121,19 +125,28 @@ input {
 #current-weather-container {
     display: flex;
     justify-content: space-between;
-    height: 50%;
+    height: 45%;
     line-height: 2rem;
+}
+
+#current-weather-icon {
+    position: relative;
+    top: -30px;
+    left: 20px;
+    min-width: 40%;
+    max-width: 50%;
 }
 
 #weather-condition {
     font-size: calc(8px + (18 - 8) * ((100vw - 300px) / (1600 - 300)));
     color: white;
+    padding-bottom: 5%;
 }
 
 #forecast-container {
     display: flex;
     justify-content: space-between;
-    height: 50%;
+    height: 45%;
     line-height: 2rem;
     margin-top: 2%;
 }
@@ -155,15 +168,20 @@ ul {
 
 .week-day {
     color: white;
-    margin-bottom: 7%;
 }
 
 .forecast-item {
     font-size: calc(10px + (20 - 10) * ((100vw - 300px) / (1600 - 300)));
 }
 
-.weather-icon {
-    width: 80%;
+.forecast-icon-cont {
+    height: 45%;
+}
+
+.forecast-weather-icon {
+    position: relative;
+    top: -20px;;
+    width: 100%;
 }
 
 #git-icon {
