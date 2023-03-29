@@ -1,3 +1,4 @@
+const openWeatherMapApi = '8dae45263da0f536558e77ad17ba21c3';
 const date = dayjs().format('ddd, MMM D, YYYY H:mm A');
 const searchBtnEl = $('#search-btn'); // reference to the "search" button element
 const historyBoxEl = $('<div>').attr('id', 'history-btn-container');
@@ -36,35 +37,20 @@ searchBtnEl.click(function(event) {
 // function to retrieve the current weather data
 const getCurrentWeather = (lat, lon) => {
     
-    $("#left-side").text('');
-    $("#current-weather-values").text('');
-    
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${openWeatherMapApi}`)
     .then(response => response.json())
     .then(data => {
         const cityName = data.name;
         const country = data.sys.country;
+       
+        displayCurrentWeather(data, cityName, country)
+        getForecast(lat, lon)
+        saveSearchHistory(cityName, country, lat, lon);
         
-        $("#left-side").append(`<li id="city-name">${cityName}, ${country}</li>`); // city name, country code
-        $('#left-side').append(`<li id="weather-condition">${data.weather[0].main}</li>`); // weather condition (clouds/rainy etc)
-        $('<img>', {
-            class: 'weather-icon',
-            src: `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`, // weather icon
-            alt: 'weather image'
-        }).appendTo('#left-side')
-        
-        
-        $("#current-weather-values").append(`<li id="date">${date}</li>`); // current date
-        $('#current-weather-values').append(`<li>temp: <span class="weather-value">${data.main.temp} &#8457;</span></li>`); // current temperature
-        $('#current-weather-values').append(`<li>wind: <span class="weather-value">${data.wind.speed} mph</span></span></li>`); // current wind speed 
-        $('#current-weather-values').append(`<li>humidity: <span class="weather-value">${data.main.humidity}%</span></li>`); // current humidity
-        
-        
-        saveSearchHistory(cityName, country, lat, lon)        
     });
     
-    getForecast(lat, lon)
 }
+
 
 // function to retrieve the 5 day forecast weather data
 const getForecast = (lat, lon) => {
@@ -78,9 +64,14 @@ const getForecast = (lat, lon) => {
         const i = [4, 12, 20, 28, 36];
         
         i.forEach(function(i) {
-
+            
             let dayOfWeek = dayjs(data.list[i].dt_txt).format('ddd, MMM D');
-            let weatherIcon = `https://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png` 
+            let weatherIconCode = data.list[i].weather[0].icon 
+            console.log(weatherIconCode)
+            const objIndex = weatherIcons.findIndex(element => element.iconCode === weatherIconCode);
+            console.log(objIndex);
+            
+             // weather icon ./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}
             
             $('<ul>', {
                 class: 'forecast-list',
@@ -88,15 +79,51 @@ const getForecast = (lat, lon) => {
             }).appendTo('#forecast-container');
 
             $(`#index-${i}`).append(`<li class="week-day">${dayOfWeek}</li>`);
-            $(`#index-${i}`).append(`<li class="forecast-item"><img class="weather-icon" src="${weatherIcon}" alt="weather image"></li>`);
-            $(`#index-${i}`).append(`<li class="forecast-item">temp: <span class="weather-value">${data.list[i].main.temp} &#8457;</span></li>`);
-            $(`#index-${i}`).append(`<li class="forecast-item">wind: <span class="weather-value">${data.list[i].wind.speed} mph</span></span></li>`);
-            $(`#index-${i}`).append(`<li class="forecast-item">humidity: <span class="weather-value">${data.list[i].main.humidity}%</span></li>`);
+            $(`#index-${i}`).append(`<li class="forecast-item"><img class="weather-icon" src="./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}" alt="weather image"></li>`);
+            $(`#index-${i}`).append(`<li class="forecast-item">Temp: <span class="weather-value">${data.list[i].main.temp} &#8457;</span></li>`);
+            $(`#index-${i}`).append(`<li class="forecast-item">Wind: <span class="weather-value">${data.list[i].wind.speed} mph</span></span></li>`);
+            $(`#index-${i}`).append(`<li class="forecast-item">Humidity: <span class="weather-value">${data.list[i].main.humidity}%</span></li>`);
         })
         
     })   
 
 }
+
+
+// displays current weather based on the weather data retrieved from the API within the getCurrentWeather()
+const displayCurrentWeather = (data, cityName, country) => {
+
+    $("#left-side").text('');
+    $("#current-weather-values").text('');
+    $('#weather-container').removeClass('hide');
+
+    let iconCode = data.weather[0].icon;
+    console.log(iconCode);
+
+    const objIndex = weatherIcons.findIndex(element => element.iconCode === iconCode);
+
+    console.log(objIndex)
+
+    $("#left-side").append(`<li id="city-name">${cityName}, ${country}</li>`); // city name, country code
+    $('#left-side').append(`<li id="weather-condition">${data.weather[0].description}</li>`); // weather condition (cloudy/rainy etc)
+    $('<img>', {
+        class: 'weather-icon',
+        src: `./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}`, // weather icon
+        alt: 'weather image'
+    }).appendTo('#left-side');
+    
+    $("#current-weather-values").append(`<li id="date">${date}</li>`); // current date
+    $('#current-weather-values').append(`<li>Temp: <span class="weather-value">${data.main.temp} &#8457;</span></li>`); // current temperature
+    $('#current-weather-values').append(`<li>Wind: <span class="weather-value">${data.wind.speed} mph</span></span></li>`); // current wind speed 
+    $('#current-weather-values').append(`<li>Humidity: <span class="weather-value">${data.main.humidity}%</span></li>`); // current humidity
+                         
+};
+
+
+// dispaly forecast weather
+const displayForecast = () => {
+
+};
 
 
 // function that stores search history in the local storage.
