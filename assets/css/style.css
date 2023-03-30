@@ -132,15 +132,12 @@ input {
 #current-weather-icon {
     position: relative;
     top: -30px;
-    left: 20px;
-    min-width: 40%;
-    max-width: 50%;
+    height: 100%;
 }
 
 #weather-condition {
     font-size: calc(8px + (18 - 8) * ((100vw - 300px) / (1600 - 300)));
     color: white;
-    padding-bottom: 5%;
 }
 
 #forecast-container {
@@ -170,6 +167,10 @@ ul {
     color: white;
 }
 
+.forecast-list {
+    width: 20%;
+}
+
 .forecast-item {
     font-size: calc(10px + (20 - 10) * ((100vw - 300px) / (1600 - 300)));
 }
@@ -180,16 +181,9 @@ ul {
 
 .forecast-weather-icon {
     position: relative;
-    top: -20px;;
-    width: 100%;
-}
-
-#git-icon {
-    transition: transform .5s ease-out; 
-}
-
-#git-icon:hover {
-    transform: rotate(360deg);
+    /* top: -30px;; */
+    /* width: 90%; */
+    height: 120%;
 }
 
 /* weather container ends here */
@@ -236,7 +230,7 @@ ul {
 #modal-close-btn:hover {
     background-color: #2a7daa;
 }
-  
+
 /* end of modal-box styling */
 
 /* footer styling starts here */
@@ -246,7 +240,7 @@ footer {
     justify-content: center;
     align-items: center;
     border-top: solid 1px var(--bg-border);
-   
+    
 }
 
 footer a {
@@ -259,8 +253,18 @@ footer a img {
     margin: 3px;
 }
 
+#git-icon {
+    transition: transform .5s ease-out; 
+}
+
 /* end of foorter styling */
+
 
 .hide {
     display: none;
+}
+
+
+#git-icon:hover {
+    transform: rotate(360deg);
 }
