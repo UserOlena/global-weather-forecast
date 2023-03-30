@@ -45,8 +45,7 @@ const getCurrentWeather = (lat, lon) => {
        
         displayCurrentWeather(data, cityName, country)
         getForecast(lat, lon)
-        saveSearchHistory(cityName, country, lat, lon);
-        
+        saveSearchHistory(cityName, country, lat, lon);       
     });
     
 }
@@ -55,39 +54,12 @@ const getCurrentWeather = (lat, lon) => {
 // function to retrieve the 5 day forecast weather data
 const getForecast = (lat, lon) => {
 
-    $('#forecast-container').text('');
-    
     fetch(`http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${openWeatherMapApi}`)
     .then(response => response.json())
     .then(data => {
-
-        const i = [4, 12, 20, 28, 36];
-        
-        i.forEach(function(i) {
-            
-            let dayOfWeek = dayjs(data.list[i].dt_txt).format('ddd, MMM D');
-            let weatherIconCode = data.list[i].weather[0].icon 
-            console.log(weatherIconCode)
-            const objIndex = weatherIcons.findIndex(element => element.iconCode === weatherIconCode);
-            console.log(objIndex);
-            
-             // weather icon ./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}
-            
-            $('<ul>', {
-                class: 'forecast-list',
-                id: `index-${i}`,
-            }).appendTo('#forecast-container');
-
-            $(`#index-${i}`).append(`<li class="week-day">${dayOfWeek}</li>`);
-            $(`#index-${i}`).append(`<li id="weather-condition">${data.list[i].weather[0].description}</li>`); // weather condition (cloudy/rainy etc)
-            $(`#index-${i}`).append(`<li class="forecast-icon-cont"><img class="forecast-weather-icon" src="./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}" alt="weather image"></li>`);
-            $(`#index-${i}`).append(`<li class="forecast-item">Temp: <span class="weather-value">${data.list[i].main.temp} &#8457;</span></li>`);
-            $(`#index-${i}`).append(`<li class="forecast-item">Wind: <span class="weather-value">${data.list[i].wind.speed} mph</span></span></li>`);
-            $(`#index-${i}`).append(`<li class="forecast-item">Humidity: <span class="weather-value">${data.list[i].main.humidity}%</span></li>`);
-        })
-        
+        displayForecast(data.list);
+        console.log(data)
     })   
-
 }
 
 
@@ -110,7 +82,7 @@ const displayCurrentWeather = (data, cityName, country) => {
     $('#left-side-title').append(`<li id="weather-condition">${data.weather[0].description}</li>`); // weather condition (cloudy/rainy etc)
     $('<img>', {
         id: 'current-weather-icon',
-        src: `./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}`, // weather icon
+        src: `./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}`, // weather icon ./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}`
         alt: 'weather image'
     }).appendTo('#left-side');
     
@@ -123,8 +95,43 @@ const displayCurrentWeather = (data, cityName, country) => {
 
 
 // dispaly forecast weather
-const displayForecast = () => {
+const displayForecast = (forecastData) => {
 
+    $('#forecast-container').text(''); // to remove previously generated content
+
+    const afternoonData = [];
+
+    // for loop is used to extract objects for the upcoming five forecast days with a time of 3:00 PM. At the time when this app was developed, the openweathermap API provided icons with a night theme for forecasted weather occurring at or before 12:00 PM.
+    forecastData.forEach(element => {
+        
+        if (dayjs(element.dt_txt).format('HH:mm:ss') === '15:00:00') {
+            afternoonData.push(element);   
+        }
+    });
+    
+    // generates components based on forecast information obtained from an API
+    afternoonData.forEach(element => {
+        
+        const dayOfWeek = dayjs(element.dt_txt).format('ddd, MMM D');
+        const id = dayjs(element.dt_txt).format('MMM-D');
+        const weatherIconCode = element.weather[0].icon 
+        const objIndex = weatherIcons.findIndex(element => element.iconCode === weatherIconCode);
+        
+        $('<ul>', {
+            class: 'forecast-list',
+            id: `${id}`,
+        }).appendTo('#forecast-container');
+
+        $(`#${id}`).append(`<li class="week-day">${dayOfWeek}</li>`);
+        $(`#${id}`).append(`<li id="weather-condition">${element.weather[0].description}</li>`); // weather condition (cloudy/rainy etc)
+        $(`#${id}`).append(`<li class="forecast-icon-cont"><img 
+            class="forecast-weather-icon" 
+            src="./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}" 
+            alt="weather image"></li>`);
+        $(`#${id}`).append(`<li class="forecast-item">Temp: <span class="weather-value">${element.main.temp} &#8457;</span></li>`);
+        $(`#${id}`).append(`<li class="forecast-item">Wind: <span class="weather-value">${element.wind.speed} mph</span></span></li>`);
+        $(`#${id}`).append(`<li class="forecast-item">Humidity: <span class="weather-value">${element.main.humidity}%</span></li>`);
+    })
 };
 
 
