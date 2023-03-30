@@ -74,10 +74,11 @@ input {
 
 #history-btn-container {
     overflow-y: scroll;
+    min-width: 100%;
 }
 
 #search-btn, .history-btn, #clear-btn {
-    width: 100%;
+    min-width: 100%;
     padding: 2% 2%;
     margin: 3% 0;
     border-radius: 10px;
@@ -98,17 +99,16 @@ input {
     text-shadow: 0 0 4px black;
 }
 
-
 /* aside ends here */
 
 
 /* weather container starts here */
 
 #weather-container {
-    width: 75%;
+    width: 70%;
     height: 85%;
     margin: auto 2%;
-    padding: 2%;
+    padding: 2% 0 2% 3%;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4));
     border: solid 2px var(--bg-border);
     border-radius: 15px;
@@ -135,7 +135,8 @@ input {
 
 #current-weather-icon {
     position: relative;
-    top: -38px;
+    left: 80px;
+    top: -60px;
     height: 100%;
 }
 
@@ -144,9 +145,18 @@ input {
     color: white;
 }
 
+#right-side {
+    width: 40%;
+}
+
+#date {
+    color: white;
+    line-height: 5rem;
+}
+
 #forecast-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     height: 45%;
     line-height: 2rem;
     margin-top: 2%;
@@ -160,11 +170,6 @@ ul {
 .weather-value {
     text-decoration: underline;
     color: white;
-}
-
-#date {
-    color: white;
-    line-height: 5rem;
 }
 
 .week-day {

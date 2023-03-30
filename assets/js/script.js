@@ -2,11 +2,8 @@ const openWeatherMapApi = '8dae45263da0f536558e77ad17ba21c3';
 const date = dayjs().format('ddd, MMM D, YYYY H:mm A');
 const searchBtnEl = $('#search-btn'); // reference to the "search" button element
 const historyBoxEl = $('<div>').attr('id', 'history-btn-container');
-
+// const clearBtn = $('<button>').attr('id', 'clear-btn').text('Clear History');
 let searchInputEl = $('#search-input'); 
-
-// event listener for the "clear history" button
-$('#clear-btn').click(clearHistory);
 
 // when the "search" button is clicked, call the function to obtain the latitude and longitude values for the selected city
 searchBtnEl.click(function(event) {
@@ -80,9 +77,9 @@ const displayCurrentWeather = (data, cityName, country) => {
 
     console.log(objIndex)
 
-    $("#left-side").append(`<ul id="left-side-title"></ul>`)
-    $("#left-side-title").append(`<li id="city-name">${cityName}, ${country}</li>`); // city name, country code
-    $('#left-side-title').append(`<li id="weather-condition">${data.weather[0].description}</li>`); // weather condition (cloudy/rainy etc)
+    $("#left-side").append(`<ul id="left-side-list"></ul>`)
+    $("#left-side-list").append(`<li id="city-name">${cityName}, ${country}</li>`); // city name, country code
+    $('#left-side-list').append(`<li id="weather-condition">${data.weather[0].description}</li>`); // weather condition (cloudy/rainy etc)
     $('<img>', {
         id: 'current-weather-icon',
         src: `./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}`, // weather icon ./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}`
@@ -177,8 +174,8 @@ const saveSearchHistory = (cityName, country, lat, lon) => {
 
 // The function clears all previously generated history buttons upon initiating a new city search in order to avoid the duplication of buttons.
 function removeHistoryButtons() {
-
-    $('#history-btn-container').clear(); 
+    $('#clear-btn').addClass('hide');
+    $('.history-btn').remove(); 
 };
 
 
@@ -194,12 +191,13 @@ const displayHistoryButtons = () => {
         historyBtn = $('<button>').attr('class', 'history-btn');
         historyBtn.text(`${element.cityName}, ${element.country}`);
         historyBoxEl.append(historyBtn);
-        
     });
 
-    const clearBtn = $('<button>').attr('id', 'clear-btn').text('Clear History');
-    historyBoxEl.append(clearBtn);
-    $('aside').append(historyBoxEl);
+    historyBoxEl.insertBefore($('#clear-btn')) ;
+
+    if (searchHistory.length) {
+        $('#clear-btn').removeClass('hide');
+    }
 };
 
 
@@ -267,7 +265,7 @@ function modalMessage(problemType) {
 // this function is triggered when the "clear" history button is clicked. It removes all history buttons from the history container and deletes the data related to the history from the local storage.
 function clearHistory() {
 
-    const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+    let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
 
     removeHistoryButtons();
     localStorage.clear();
@@ -275,6 +273,10 @@ function clearHistory() {
 };
 
 displayHistoryButtons()
+
+
+// event listener for the "clear history" button
+$('#clear-btn').click(clearHistory);
 
 
 // call display history search when new search is implemented
