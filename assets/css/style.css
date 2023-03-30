@@ -1,7 +1,6 @@
 :root {
     --button-font-size: calc(14px + (24 - 14) * ((100vw - 300px) / (1600 - 300)));
     --bg-color: #063456ce;
-    /* #091d34cd; */
     --bg-border: rgb(3, 13, 18);
     --text-shadow: rgb(23, 86, 120);
     --weather-param-fs: calc(14px + (24 - 14) * ((100vw - 300px) / (1600 - 300)));
@@ -31,7 +30,6 @@ header {
     letter-spacing: 0.1rem;
     border-bottom: solid 1px var(--bg-border);
     text-shadow: 0px 0px 2px black;
-
 }
 
 /* main starts here */
@@ -71,14 +69,17 @@ input {
     margin: 3%;
     border-radius: 10px;
     font-size: var(--button-font-size);
-    border: solid 2px var(--bg-border);
-    
+    border: solid 2px var(--bg-border);   
 }
 
-#search-btn, .history-btn  {
+#history-btn-container {
+    overflow-y: scroll;
+}
+
+#search-btn, .history-btn, #clear-btn {
     width: 100%;
     padding: 2% 2%;
-    margin: 3%;
+    margin: 3% 0;
     border-radius: 10px;
     font-size: var(--button-font-size);
     background-color: var(--bg-color);
@@ -91,7 +92,10 @@ input {
 .history-btn {
     background: linear-gradient(to right top, rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.7));
     text-shadow: 0 0 4px black;
-    margin: 3% 0;
+}
+
+#clear-btn {
+    text-shadow: 0 0 4px black;
 }
 
 
@@ -131,7 +135,7 @@ input {
 
 #current-weather-icon {
     position: relative;
-    top: -30px;
+    top: -38px;
     height: 100%;
 }
 

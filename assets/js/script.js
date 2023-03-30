@@ -5,6 +5,9 @@ const historyBoxEl = $('<div>').attr('id', 'history-btn-container');
 
 let searchInputEl = $('#search-input'); 
 
+// event listener for the "clear history" button
+$('#clear-btn').click(clearHistory);
+
 // when the "search" button is clicked, call the function to obtain the latitude and longitude values for the selected city
 searchBtnEl.click(function(event) {
     
@@ -168,32 +171,34 @@ const saveSearchHistory = (cityName, country, lat, lon) => {
     localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
 
     removeHistoryButtons();
-    displayHistorySearch();
+    displayHistoryButtons();
 };
 
 
 // The function clears all previously generated history buttons upon initiating a new city search in order to avoid the duplication of buttons.
 function removeHistoryButtons() {
 
-    $('#history-btn-container > .history-btn').remove();   
+    $('#history-btn-container').clear(); 
 };
 
 
 // function retrieves the search history from local storage and displays the stored data below the input field.
-const displayHistorySearch = () => {
+const displayHistoryButtons = () => {
     
     $('#search-input').val(''); // erases the input field's contents.
     
     const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
     
-    searchHistory.forEach(function(element) {
+    searchHistory.forEach(element => {
         
         historyBtn = $('<button>').attr('class', 'history-btn');
         historyBtn.text(`${element.cityName}, ${element.country}`);
         historyBoxEl.append(historyBtn);
         
     });
-    
+
+    const clearBtn = $('<button>').attr('id', 'clear-btn').text('Clear History');
+    historyBoxEl.append(clearBtn);
     $('aside').append(historyBoxEl);
 };
 
@@ -259,7 +264,17 @@ function modalMessage(problemType) {
 }
 
 
-displayHistorySearch()
+// this function is triggered when the "clear" history button is clicked. It removes all history buttons from the history container and deletes the data related to the history from the local storage.
+function clearHistory() {
+
+    const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+
+    removeHistoryButtons();
+    localStorage.clear();
+    searchHistory = [];
+};
+
+displayHistoryButtons()
 
 
 // call display history search when new search is implemented
