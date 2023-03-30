@@ -1,7 +1,7 @@
 const openWeatherMapApi = '8dae45263da0f536558e77ad17ba21c3';
 const date = dayjs().format('ddd, MMM D, YYYY H:mm A');
 const searchBtnEl = $('#search-btn'); // reference to the "search" button element
-const historyBoxEl = $('<div>').attr('id', 'history-btn-container');
+// const historyBoxEl = $('<div>').attr('id', 'history-btn-container');
 // const clearBtn = $('<button>').attr('id', 'clear-btn').text('Clear History');
 let searchInputEl = $('#search-input'); 
 
@@ -190,10 +190,8 @@ const displayHistoryButtons = () => {
         
         historyBtn = $('<button>').attr('class', 'history-btn');
         historyBtn.text(`${element.cityName}, ${element.country}`);
-        historyBoxEl.append(historyBtn);
+        historyBtn.insertBefore($('#clear-btn')) ;
     });
-
-    historyBoxEl.insertBefore($('#clear-btn')) ;
 
     if (searchHistory.length) {
         $('#clear-btn').removeClass('hide');
@@ -201,21 +199,20 @@ const displayHistoryButtons = () => {
 };
 
 
-// The event listener captures the selected button and its city name text content, 
-// and subsequently passes latitude and longitude values corresponding to the chosen city name to the getCurrentWeather().
-historyBoxEl.click(function (event) {
-    
+// The event listener for the history button triggers the function, which retrieves the text content of the selected city name and captures its latitude and longitude values. These values are then passed on to the getCurrentWeather() function to obtain the weather data.
+const historyButtonClick = (event) => {
+
     const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-    
+
     let chosenButtonTextContent = event.target.textContent;
-    
+
     if (event.target.getAttribute('class') !== 'history-btn') {
         return
     } else {
         console.log(chosenButtonTextContent);
         
         // the function determines the index of an object in the local storage 
-        // by using the selected button and the text content of its associated city name.
+        // by using the selected button's text content of its associated city name.
         let cityIndex = searchHistory.findIndex(element => `${element.cityName}, ${element.country}` === chosenButtonTextContent);
         
         let cityLat = searchHistory[cityIndex].lat;
@@ -223,7 +220,7 @@ historyBoxEl.click(function (event) {
         
         getCurrentWeather(cityLat, cityLon);
     }
-});
+};
 
 
 // Display modal alert message
@@ -265,11 +262,8 @@ function modalMessage(problemType) {
 // this function is triggered when the "clear" history button is clicked. It removes all history buttons from the history container and deletes the data related to the history from the local storage.
 function clearHistory() {
 
-    let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-
     removeHistoryButtons();
     localStorage.clear();
-    searchHistory = [];
 };
 
 displayHistoryButtons()
@@ -277,6 +271,5 @@ displayHistoryButtons()
 
 // event listener for the "clear history" button
 $('#clear-btn').click(clearHistory);
-
-
-// call display history search when new search is implemented
+// event listener for the "history button"
+$('#history-btn-container').click(historyButtonClick);
