@@ -5,8 +5,8 @@ const searchBtnEl = $('#search-btn'); // reference to the "search" button elemen
 // const clearBtn = $('<button>').attr('id', 'clear-btn').text('Clear History');
 let searchInputEl = $('#search-input'); 
 
-// when the "search" button is clicked, call the function to obtain the latitude and longitude values for the selected city
-searchBtnEl.click(function(event) {
+//  the event listener for the "search" button triggers the function to obtain the latitude and longitude values for the selected city
+const searchBtnClick = (event) => {
     
     searchInputEl = $('#search-input').val(); // retrieve the input value that has been entered into the search field
     
@@ -32,7 +32,7 @@ searchBtnEl.click(function(event) {
         })
     }
 
-});
+};
 
 // function to retrieve the current weather data
 const getCurrentWeather = (lat, lon) => {
@@ -268,7 +268,8 @@ function clearHistory() {
 
 displayHistoryButtons()
 
-
+// event listener for the "search" button
+searchBtnEl.click(searchBtnClick);
 // event listener for the "clear history" button
 $('#clear-btn').click(clearHistory);
 // event listener for the "history button"
