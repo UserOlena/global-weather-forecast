@@ -162,7 +162,7 @@ input {
     margin-top: 2%;
 }
 
-ul {
+#weather-container ul {
     list-style-type: none;
     color: rgb(255, 156, 51);
 }
@@ -223,6 +223,7 @@ ul {
 #modal-box h3 {
     font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300))); 
     line-height: 130%;
+    margin-bottom: 3%;
 }
 
 #modal-close-btn {
@@ -236,8 +237,22 @@ ul {
     margin-top: 5%;
 }
 
+#modal-box ul {
+    list-style-type: disc;
+    color: rgb(249, 96, 0);
+    text-shadow: 0 0 1px black;
+    line-height: 2.2rem;
+    text-align: left;
+    margin-left: 10%;
+}
+
 #modal-close-btn:hover {
     background-color: #2a7daa;
+}
+
+#mult-city-list li:hover {
+    color: rgb(250, 159, 1);
+    text-decoration: underline;
 }
 
 /* end of modal-box styling */

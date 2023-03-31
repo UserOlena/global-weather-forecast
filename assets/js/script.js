@@ -18,7 +18,6 @@ const searchBtnClick = (event) => {
         fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchInputEl}&limit=5&appid=${openWeatherMapApi}`) 
         .then(response => response.json())
         .then(data => {
-            console.log(data)
             if (data.length < 1) {
                 modalMessage('wrong city name');
             } else if (data.length > 1) {
@@ -28,38 +27,52 @@ const searchBtnClick = (event) => {
                 const lon = data[0].lon;
 
                 getCurrentWeather(lat, lon);
-            }       
-    
+            }         
         })
     }
-
 };
 
 
 //  a function that can handle the processing of data in cases where the API returns information for more than one city based on a user-entered city name.
 const multipleCityData = (multCityData) => {
-    console.log(multCityData);
-
+    console.log(multCityData)
     const multCityList = $('<ul>').attr('id', 'mult-city-list');
 
     multCityData.forEach( element => 
-
         $('<li>', {
-            class: 'mult-city-item',})
-            //.data('coordinates', { lat: element.lat, lon: element.lon })
-            .text(`${element.name}, ${element.state}, ${element.country};`)
-            .appendTo(multCityList)
+            class: 'mult-city-item',
+        }).data('coordinates', { lat: element.lat, lon: element.lon 
+        }).text(`${element.name}, ${element.state}, ${element.country}`
+        ).appendTo(multCityList),
     )
-    
-    console.log(multCityList);
-    // $("main").append(multCityList)
-    modalMessage('multiple cities', multCityList[0]);
 
+    multCityList.click(multCityListClick);
+    
+    modalMessage('multiple cities', multCityList);
 };
 
 
+const multCityListClick = (event) => {
+
+    if ( $(event.target).attr('class') === 'mult-city-item' ) {
+        const chosenElCoordinates = {
+            lat: $(event.target).data('coordinates').lat,
+            lon: $(event.target).data('coordinates').lon,
+        }
+
+        console.log('button clicked')
+        $('#modal-box')[0].remove();
+        getCurrentWeather(chosenElCoordinates)
+    } else {
+        console.log('element parent was clicked')
+        return
+    }
+}
+
+
+
 // A function for obtaining the current weather information
-const getCurrentWeather = (lat, lon) => {
+const getCurrentWeather = ( { lat, lon } ) => {
     
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${openWeatherMapApi}`)
     .then(response => response.json())
@@ -70,8 +83,7 @@ const getCurrentWeather = (lat, lon) => {
         displayCurrentWeather(data, cityName, country)
         getForecast(lat, lon)
         saveSearchHistory(cityName, country, lat, lon);       
-    });
-    
+    });    
 }
 
 
@@ -113,8 +125,7 @@ const displayCurrentWeather = (data, cityName, country) => {
     $("#current-weather-values").append(`<li id="date">${date}</li>`); // current date
     $('#current-weather-values').append(`<li>Temp: <span class="weather-value">${data.main.temp} &#8457;</span></li>`); // current temperature
     $('#current-weather-values').append(`<li>Wind: <span class="weather-value">${data.wind.speed} mph</span></span></li>`); // current wind speed 
-    $('#current-weather-values').append(`<li>Humidity: <span class="weather-value">${data.main.humidity}%</span></li>`); // current humidity
-                         
+    $('#current-weather-values').append(`<li>Humidity: <span class="weather-value">${data.main.humidity}%</span></li>`); // current humidity                         
 };
 
 
@@ -276,7 +287,8 @@ function modalMessage(modalReason, paragraph) {
 
     // Hides modal alert on click "dismiss" button
     modalCloseBtn.click( function() {
-        modalContainer[0].remove()})
+        modalContainer[0].remove()
+    })
 }
 
 
