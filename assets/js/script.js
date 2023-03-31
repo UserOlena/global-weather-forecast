@@ -62,7 +62,7 @@ const multCityListClick = (event) => {
 
         console.log('button clicked')
         $('#modal-box')[0].remove();
-        getCurrentWeather(chosenElCoordinates)
+        getCurrentWeather(chosenElCoordinates.lat, chosenElCoordinates.lon)
     } else {
         console.log('element parent was clicked')
         return
@@ -72,7 +72,7 @@ const multCityListClick = (event) => {
 
 
 // A function for obtaining the current weather information
-const getCurrentWeather = ( { lat, lon } ) => {
+const getCurrentWeather = (lat, lon) => {
     
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${openWeatherMapApi}`)
     .then(response => response.json())
