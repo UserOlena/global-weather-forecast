@@ -1,6 +1,5 @@
 const openWeatherMapApi = '8dae45263da0f536558e77ad17ba21c3';
 const date = dayjs().format('ddd, MMM D, YYYY H:mm A');
-const searchBtnEl = $('#search-btn'); // reference to the "search" button element
 // const historyBoxEl = $('<div>').attr('id', 'history-btn-container');
 // const clearBtn = $('<button>').attr('id', 'clear-btn').text('Clear History');
 let searchInputEl = $('#search-input'); 
@@ -16,12 +15,13 @@ const searchBtnClick = (event) => {
     } else {
         event.preventDefault();
         // API to get the lat and lon values based on the entered city
-        fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchInputEl}&limit=1&appid=${openWeatherMapApi}`) 
+        fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchInputEl}&limit=5&appid=${openWeatherMapApi}`) 
         .then(response => response.json())
         .then(data => {
             if (data.length < 1) {
-                console.log('data is undefined')
                 modalMessage('wrong city name');
+            } else if (data.length > 1) {
+                multipleCityData(data);
             } else {
                 const lat = data[0].lat;
                 const lon = data[0].lon;
@@ -34,7 +34,30 @@ const searchBtnClick = (event) => {
 
 };
 
-// function to retrieve the current weather data
+
+//  a function that can handle the processing of data in cases where the API returns information for more than one city based on a user-entered city name.
+const multipleCityData = (multCityData) => {
+    console.log(multCityData);
+
+    const multCityList = $('<ul>').attr('id', 'mult-city-list');
+
+    multCityData.forEach( element => 
+
+        $('<li>', {
+            class: 'mult-city-item',})
+            //.data('coordinates', { lat: element.lat, lon: element.lon })
+            .text(`${element.name}, ${element.state}, ${element.country};`)
+            .appendTo(multCityList)
+    )
+    
+    console.log(multCityList);
+    // $("main").append(multCityList)
+    modalMessage('multiple cities', multCityList[0]);
+
+};
+
+
+// A function for obtaining the current weather information
 const getCurrentWeather = (lat, lon) => {
     
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${openWeatherMapApi}`)
@@ -224,7 +247,7 @@ const historyButtonClick = (event) => {
 
 
 // Display modal alert message
-function modalMessage(problemType) {
+function modalMessage(problemType, paragraph) {
     
     const modalContainer = document.createElement('dialog');
     modalContainer.setAttribute('id', 'modal-box');
@@ -240,13 +263,15 @@ function modalMessage(problemType) {
         modalMessage.textContent = 'Sorry, we could not locate the requested city. Please ensure that you have entered the correct city name.'; 
     } else if (problemType === 'empty input value') {
         modalMessage.textContent = 'The input field must not be left empty. Please enter a city name.';    
+    } else if (problemType === 'multiple cities') {
+        modalMessage.textContent = 'We have found multiple options based on your search criteria. Kindly specify the city you are looking for:'
     }
-    
+
     const modalCloseBtn = document.createElement('button');
     modalCloseBtn.setAttribute('id', 'modal-close-btn');
     modalCloseBtn.textContent = 'dismiss';
     
-    modalContainer.append(emoji, modalMessage, modalCloseBtn);
+    modalContainer.append(emoji, modalMessage, paragraph, modalCloseBtn);
     document.querySelector('body').appendChild(modalContainer);
     
     modalContainer.showModal();
@@ -269,8 +294,9 @@ function clearHistory() {
 displayHistoryButtons()
 
 // event listener for the "search" button
-searchBtnEl.click(searchBtnClick);
+$('#search-btn').click(searchBtnClick);
 // event listener for the "clear history" button
 $('#clear-btn').click(clearHistory);
 // event listener for the "history button"
 $('#history-btn-container').click(historyButtonClick);
+`searchButtonClick`
