@@ -18,6 +18,7 @@ const searchBtnClick = (event) => {
         fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchInputEl}&limit=5&appid=${openWeatherMapApi}`) 
         .then(response => response.json())
         .then(data => {
+            console.log(data)
             if (data.length < 1) {
                 modalMessage('wrong city name');
             } else if (data.length > 1) {
@@ -247,40 +248,35 @@ const historyButtonClick = (event) => {
 
 
 // Display modal alert message
-function modalMessage(problemType, paragraph) {
+function modalMessage(modalReason, paragraph) {
     
-    const modalContainer = document.createElement('dialog');
-    modalContainer.setAttribute('id', 'modal-box');
+    const modalContainer = $('<dialog>').attr('id', 'modal-box').appendTo($('body'));
     
-    const emoji = document.createElement('img');
-    emoji.setAttribute('id', 'modal-emoji');
-    emoji.setAttribute('src', './assets/img/emoji-idk.png');
-    emoji.setAttribute('alt', "I don't know emoji");
+    const emoji = $('<img>', {
+        id: 'modal-emoji',
+        src: './assets/img/emoji-idk.png',
+        alt: 'I don\'t know emoji',
+    });
     
-    const modalMessage = document.createElement('h3');
+    const modalTitle = $('<h3>');
 
-    if (problemType === 'wrong city name') {
-        modalMessage.textContent = 'Sorry, we could not locate the requested city. Please ensure that you have entered the correct city name.'; 
-    } else if (problemType === 'empty input value') {
-        modalMessage.textContent = 'The input field must not be left empty. Please enter a city name.';    
-    } else if (problemType === 'multiple cities') {
-        modalMessage.textContent = 'We have found multiple options based on your search criteria. Kindly specify the city you are looking for:'
+    if (modalReason === 'wrong city name') {
+        modalTitle.text('Sorry, we could not locate the requested city. Please ensure that you have entered the correct city name.'); 
+    } else if (modalReason === 'empty input value') {
+        modalTitle.text('The input field must not be left empty. Please enter a city name.');
+    } else if (modalReason === 'multiple cities') {
+        modalTitle.text('We have found multiple options based on your search criteria. Kindly specify the city you are looking for:');
     }
 
-    const modalCloseBtn = document.createElement('button');
-    modalCloseBtn.setAttribute('id', 'modal-close-btn');
-    modalCloseBtn.textContent = 'dismiss';
+    const modalCloseBtn = $('<button>').attr('id', 'modal-close-btn').text('dismiss');
     
-    modalContainer.append(emoji, modalMessage, paragraph, modalCloseBtn);
-    document.querySelector('body').appendChild(modalContainer);
-    
-    modalContainer.showModal();
+    modalContainer.append(emoji, modalTitle, paragraph, modalCloseBtn);
+
+    modalContainer[0].showModal();
 
     // Hides modal alert on click "dismiss" button
-    modalCloseBtn.addEventListener('click', function() {
-      
-        modalContainer.remove()
-    })
+    modalCloseBtn.click( function() {
+        modalContainer[0].remove()})
 }
 
 
