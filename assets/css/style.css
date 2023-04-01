@@ -25,12 +25,25 @@ header {
     padding: 1%;
     display: flex;
     justify-content: center;
+    align-items: center;
     color: white;
     font-weight: 700;
     letter-spacing: 0.1rem;
     border-bottom: solid 1px var(--bg-border);
     text-shadow: 0px 0px 2px black;
 }
+
+#header-title {
+    padding-left: 20%;
+    margin-left: auto;
+}
+
+#date {
+    color: white;
+    margin-left: auto;
+    font-size: var(--button-font-size);
+}
+
 
 /* main starts here */
 
@@ -47,7 +60,7 @@ main {
 /* aside starts here */
 
 aside {
-    width: 25%;
+    width: 27%;
     height: 90%;
     margin: 2% 2%;
     padding-left: 2%;
@@ -122,6 +135,7 @@ input {
 
 #city-name {
     padding-top: 8%;
+    margin-bottom: 2%;
     font-size: calc(20px + (34 - 20) * ((100vw - 300px) / (1600 - 300)));
     color: white;
 }
@@ -135,23 +149,19 @@ input {
 
 #current-weather-icon {
     position: relative;
-    left: 80px;
-    top: -60px;
-    height: 100%;
+    top: -50px;
+    right: 50px;
+    height: 150%;
 }
 
 #weather-condition {
     font-size: calc(8px + (18 - 8) * ((100vw - 300px) / (1600 - 300)));
     color: white;
+    margin-bottom: 3%;
 }
 
 #right-side {
     width: 40%;
-}
-
-#date {
-    color: white;
-    line-height: 5rem;
 }
 
 #forecast-container {
@@ -253,6 +263,11 @@ input {
 #mult-city-list li:hover {
     color: rgb(250, 159, 1);
     text-decoration: underline;
+
+}
+
+#search-btn:hover,  #clear-btn:hover, .history-btn:hover, input:hover {
+    box-shadow: 0 0 6px black;;
 }
 
 /* end of modal-box styling */
@@ -263,8 +278,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-top: solid 1px var(--bg-border);
-    
+    border-top: solid 1px var(--bg-border);   
 }
 
 footer a {

@@ -10,7 +10,8 @@
 </head>
 <body>
     <header>
-        <nav>Weather Forecast</nav>
+        <h1 id="header-title">Weather Forecast</h1>
+        <p id="date"></p>
     </header>
     <main>
         <aside>
@@ -23,14 +24,20 @@
         </aside>
         <section id="weather-container" class="hide">
             <div id="current-weather-container">
-                <div id="left-side"></div>
+                <div id="left-side">
+                    <ul id="left-side-list">
+                        <li id="city-name" class="remove-content"></li>
+                        <li id="weather-condition" class="remove-content"></li>
+                        <li>Temp: <span id="temp-value" class="weather-value remove-content"></span></li>
+                        <li>Wind: <span id="wind-value" class="weather-value remove-content"></span></span></li>
+                        <li>Humidity: <span id="humidity-value" class="weather-value remove-content"></span></li>
+                    </ul>
+                </div>
                 <div id="right-side">
-                    <ul id="current-weather-values"></ul>
+                    <img id="current-weather-icon" class="remove-src-attr" alt="weather image">
                 </div>
             </div>
-            <div id="forecast-container">
-                
-            </div>
+            <div id="forecast-container"></div>
         </section>
     </main>
     <footer>
