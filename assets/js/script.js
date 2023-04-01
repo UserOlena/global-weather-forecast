@@ -1,5 +1,6 @@
 const openWeatherMapApi = '8dae45263da0f536558e77ad17ba21c3';
 const date = dayjs().format('ddd, MMM D, YYYY H:mm A');
+$('#date').text(`${date}`) // current date
 // const historyBoxEl = $('<div>').attr('id', 'history-btn-container');
 // const clearBtn = $('<button>').attr('id', 'clear-btn').text('Clear History');
 // let searchInputEl = $('#search-input'); 
@@ -109,32 +110,18 @@ const getForecast = (lat, lon) => {
 // displays current weather based on the weather data retrieved from the API within the getCurrentWeather()
 const displayCurrentWeather = (weatherData, newCityObj) => {
 
-    $("#left-side").text('');
-    $("#current-weather-values").text('');
+    $('.remove-content').text('');
+    $('.remove-src-attr').removeAttr('src');
     $('#weather-container').removeClass('hide');
-
-    let iconCode = weatherData.weather[0].icon;
-    console.log(iconCode);
-
-    const objIndex = weatherIcons.findIndex(element => element.iconCode === iconCode);
-
-    console.log(objIndex)
-
-    $('#city-name').text('');
-
-    $("#left-side").append(`<ul id="left-side-list"></ul>`)
-    $("#left-side-list").append(`<li id="city-name">${newCityObj.cityName}, ${newCityObj.state}, ${newCityObj.country}</li>`); // city name, state, country code
-    $('#left-side-list').append(`<li id="weather-condition">${weatherData.weather[0].description}</li>`); // weather condition (cloudy/rainy etc)
-    $('<img>', {
-        id: 'current-weather-icon',
-        src: `./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}`, // weather icon ./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}`
-        alt: 'weather image'
-    }).appendTo('#left-side');
     
-    $("#current-weather-values").append(`<li id="date">${date}</li>`); // current date
-    $('#current-weather-values').append(`<li>Temp: <span class="weather-value">${weatherData.main.temp} &#8457;</span></li>`); // current temperature
-    $('#current-weather-values').append(`<li>Wind: <span class="weather-value">${weatherData.wind.speed} mph</span></span></li>`); // current wind speed 
-    $('#current-weather-values').append(`<li>Humidity: <span class="weather-value">${weatherData.main.humidity}%</span></li>`); // current humidity                         
+    $('#city-name').text(`${newCityObj.cityName}, ${newCityObj.state}, ${newCityObj.country}`);
+    $('#weather-condition').text(`${weatherData.weather[0].description}`);
+    $('#temp-value').text(`${weatherData.main.temp} \u2109`);
+    $('#wind-value').text(`${weatherData.wind.speed} mph`);
+    $('#humidity-value').text(`${weatherData.main.humidity}%`);
+    
+    const objIndex = weatherIcons.findIndex(element => element.iconCode === weatherData.weather[0].icon);
+    $('#current-weather-icon').attr('src', `./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}`) // weather icon
 };
 
 
@@ -305,4 +292,3 @@ $('#search-btn').click(searchBtnClick);
 $('#clear-btn').click(clearHistory);
 // event listener for the "history button"
 $('#history-btn-container').click(historyButtonClick);
-`searchButtonClick`
