@@ -2,7 +2,7 @@ const openWeatherMapApi = '8dae45263da0f536558e77ad17ba21c3';
 const date = dayjs().format('ddd, MMM D, YYYY H:mm A');
 // const historyBoxEl = $('<div>').attr('id', 'history-btn-container');
 // const clearBtn = $('<button>').attr('id', 'clear-btn').text('Clear History');
-let searchInputEl = $('#search-input'); 
+// let searchInputEl = $('#search-input'); 
 
 //  the event listener for the "search" button triggers the function to obtain the latitude and longitude values for the selected city
 const searchBtnClick = (event) => {
@@ -21,28 +21,39 @@ const searchBtnClick = (event) => {
             if (data.length < 1) {
                 modalMessage('wrong city name');
             } else if (data.length > 1) {
-                multipleCityData(data);
+                console.log(data)
+                createMultipleCityList(data);
             } else {
-                const lat = data[0].lat;
-                const lon = data[0].lon;
-
-                getCurrentWeather(lat, lon);
+                const newCityObj = createNewCityObj(data[0]);
+                getCurrentWeather(newCityObj);
             }         
         })
     }
 };
 
 
+// function generates a new object by retrieving data from an API based on the user's search for a particular city.
+const createNewCityObj = (cityData) => {
+    return {
+        cityName: cityData.name,
+        state: cityData.state,
+        country: cityData.country,
+        lat: cityData.lat,
+        lon: cityData.lon,
+    }
+}
+
+
 //  a function that can handle the processing of data in cases where the API returns information for more than one city based on a user-entered city name.
-const multipleCityData = (multCityData) => {
+const createMultipleCityList = (multCityData) => {
     console.log(multCityData)
     const multCityList = $('<ul>').attr('id', 'mult-city-list');
 
     multCityData.forEach( element => 
         $('<li>', {
             class: 'mult-city-item',
-        }).data('coordinates', { lat: element.lat, lon: element.lon 
-        }).text(`${element.name}, ${element.state}, ${element.country}`
+        }).data('cityData', createNewCityObj(element)
+        ).text(`${element.name}, ${element.state}, ${element.country}`
         ).appendTo(multCityList),
     )
 
@@ -52,17 +63,15 @@ const multipleCityData = (multCityData) => {
 };
 
 
+// 
 const multCityListClick = (event) => {
 
-    if ( $(event.target).attr('class') === 'mult-city-item' ) {
-        const chosenElCoordinates = {
-            lat: $(event.target).data('coordinates').lat,
-            lon: $(event.target).data('coordinates').lon,
-        }
+    if ( $(event.target).hasClass('mult-city-item') ) {
+        const chosenCityData = $(event.target).data('cityData');
 
-        console.log('button clicked')
+        console.log(chosenCityData, 'button clicked')
         $('#modal-box')[0].remove();
-        getCurrentWeather(chosenElCoordinates.lat, chosenElCoordinates.lon)
+        getCurrentWeather(chosenCityData)
     } else {
         console.log('element parent was clicked')
         return
@@ -72,17 +81,16 @@ const multCityListClick = (event) => {
 
 
 // A function for obtaining the current weather information
-const getCurrentWeather = (lat, lon) => {
+const getCurrentWeather = (newCityObj) => {
     
-    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${openWeatherMapApi}`)
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${newCityObj.lat}&lon=${newCityObj.lon}&units=imperial&appid=${openWeatherMapApi}`)
     .then(response => response.json())
     .then(data => {
-        const cityName = data.name;
-        const country = data.sys.country;
-       
-        displayCurrentWeather(data, cityName, country)
-        getForecast(lat, lon)
-        saveSearchHistory(cityName, country, lat, lon);       
+        console.log(data)
+            
+        displayCurrentWeather(data, newCityObj)
+        getForecast(newCityObj.lat, newCityObj.lon)
+        saveSearchHistory(newCityObj);       
     });    
 }
 
@@ -94,28 +102,29 @@ const getForecast = (lat, lon) => {
     .then(response => response.json())
     .then(data => {
         displayForecast(data.list);
-        console.log(data)
     })   
 }
 
 
 // displays current weather based on the weather data retrieved from the API within the getCurrentWeather()
-const displayCurrentWeather = (data, cityName, country) => {
+const displayCurrentWeather = (weatherData, newCityObj) => {
 
     $("#left-side").text('');
     $("#current-weather-values").text('');
     $('#weather-container').removeClass('hide');
 
-    let iconCode = data.weather[0].icon;
+    let iconCode = weatherData.weather[0].icon;
     console.log(iconCode);
 
     const objIndex = weatherIcons.findIndex(element => element.iconCode === iconCode);
 
     console.log(objIndex)
 
+    $('#city-name').text('');
+
     $("#left-side").append(`<ul id="left-side-list"></ul>`)
-    $("#left-side-list").append(`<li id="city-name">${cityName}, ${country}</li>`); // city name, country code
-    $('#left-side-list').append(`<li id="weather-condition">${data.weather[0].description}</li>`); // weather condition (cloudy/rainy etc)
+    $("#left-side-list").append(`<li id="city-name">${newCityObj.cityName}, ${newCityObj.state}, ${newCityObj.country}</li>`); // city name, state, country code
+    $('#left-side-list').append(`<li id="weather-condition">${weatherData.weather[0].description}</li>`); // weather condition (cloudy/rainy etc)
     $('<img>', {
         id: 'current-weather-icon',
         src: `./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}`, // weather icon ./assets/img/weather-icons/${weatherIcons[objIndex].iconImg}`
@@ -123,9 +132,9 @@ const displayCurrentWeather = (data, cityName, country) => {
     }).appendTo('#left-side');
     
     $("#current-weather-values").append(`<li id="date">${date}</li>`); // current date
-    $('#current-weather-values').append(`<li>Temp: <span class="weather-value">${data.main.temp} &#8457;</span></li>`); // current temperature
-    $('#current-weather-values').append(`<li>Wind: <span class="weather-value">${data.wind.speed} mph</span></span></li>`); // current wind speed 
-    $('#current-weather-values').append(`<li>Humidity: <span class="weather-value">${data.main.humidity}%</span></li>`); // current humidity                         
+    $('#current-weather-values').append(`<li>Temp: <span class="weather-value">${weatherData.main.temp} &#8457;</span></li>`); // current temperature
+    $('#current-weather-values').append(`<li>Wind: <span class="weather-value">${weatherData.wind.speed} mph</span></span></li>`); // current wind speed 
+    $('#current-weather-values').append(`<li>Humidity: <span class="weather-value">${weatherData.main.humidity}%</span></li>`); // current humidity                         
 };
 
 
@@ -137,19 +146,17 @@ const displayForecast = (forecastData) => {
     const afternoonData = [];
 
     // for loop is used to extract objects for the upcoming five forecast days with a time of 3:00 PM. At the time when this app was developed, the openweathermap API provided icons with a night theme for forecasted weather occurring at or before 12:00 PM.
-    forecastData.forEach(element => {
-        
+    forecastData.forEach(element => {       
         if (dayjs(element.dt_txt).format('HH:mm:ss') === '15:00:00') {
             afternoonData.push(element);   
         }
     });
     
     // generates components based on forecast information obtained from an API
-    afternoonData.forEach(element => {
-        
+    afternoonData.forEach(element => {       
         const dayOfWeek = dayjs(element.dt_txt).format('ddd, MMM D');
         const id = dayjs(element.dt_txt).format('MMM-D');
-        const weatherIconCode = element.weather[0].icon 
+        const weatherIconCode = element.weather[0].icon;
         const objIndex = weatherIcons.findIndex(element => element.iconCode === weatherIconCode);
         
         $('<ul>', {
@@ -171,29 +178,22 @@ const displayForecast = (forecastData) => {
 
 
 // function that stores search history in the local storage.
-const saveSearchHistory = (cityName, country, lat, lon) => {
+const saveSearchHistory = (newCityObj) => {
 
     const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-    
-    // an object containing the current city search.
-    let newSearchItem = {
-        cityName: `${cityName}`,
-        country: `${country}`,
-        lat: lat,
-        lon: lon,
-    };
 
+    console.log(newCityObj)
     // an if-statement that verifies whether the current search city already exists in the localStorage and removes it from the storage
     if (searchHistory.length > 0) {
         for (let i = 0; i < searchHistory.length; i++) {
-            if (searchHistory[i].lat == newSearchItem.lat) {
+            if (searchHistory[i].lat == newCityObj.lat) {
                 searchHistory.splice(i, 1);
             }
         }
     };
 
     // The new city is added to the beginning of the array using the unshift() method below, becoming the most recent item.
-    searchHistory.unshift(newSearchItem);
+    searchHistory.unshift(newCityObj);
 
     // To limit the array of objects to a maximum of 10 items, an if-statement has been added to remove the last items until there are only 10 remaining. 
     while (searchHistory.length > 10) {
@@ -223,9 +223,11 @@ const displayHistoryButtons = () => {
     
     searchHistory.forEach(element => {
         
-        historyBtn = $('<button>').attr('class', 'history-btn');
-        historyBtn.text(`${element.cityName}, ${element.country}`);
-        historyBtn.insertBefore($('#clear-btn')) ;
+        historyBtn = $('<button>').attr('class', 'history-btn'
+        ).data('cityLat', {
+            lat: element.lat,
+        }).text(`${element.cityName}, ${element.state}, ${element.country}`
+        ).insertBefore($('#clear-btn')) ;
     });
 
     if (searchHistory.length) {
@@ -239,21 +241,17 @@ const historyButtonClick = (event) => {
 
     const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
 
-    let chosenButtonTextContent = event.target.textContent;
+    const chosenCityLat = $(event.target).data('cityLat').lat;
 
-    if (event.target.getAttribute('class') !== 'history-btn') {
-        return
+    if ($(event.target).hasClass('history-btn')) {
+        console.log(chosenCityLat);
+        
+        // using the arbitrary data (latitude) of the selected DOM button, the function identifies the index of an object in the local storage
+        const chosenCityIndex = searchHistory.findIndex(element => element.lat === chosenCityLat);
+        
+        getCurrentWeather(searchHistory[chosenCityIndex]);
     } else {
-        console.log(chosenButtonTextContent);
-        
-        // the function determines the index of an object in the local storage 
-        // by using the selected button's text content of its associated city name.
-        let cityIndex = searchHistory.findIndex(element => `${element.cityName}, ${element.country}` === chosenButtonTextContent);
-        
-        let cityLat = searchHistory[cityIndex].lat;
-        let cityLon = searchHistory[cityIndex].lon;
-        
-        getCurrentWeather(cityLat, cityLon);
+        return
     }
 };
 
