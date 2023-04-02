@@ -25,7 +25,7 @@ const searchBtnClick = (event) => {
     } else {
         event.preventDefault();
         // API to get the lat and lon values based on the entered city
-        fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchInputEl}&limit=5&appid=${openWeatherMapApi}`) 
+        fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${searchInputEl}&limit=5&appid=${openWeatherMapApi}`) 
         .then(response => response.json())
         .then(data => {
             if (data.length < 1) {
@@ -107,7 +107,7 @@ const getCurrentWeather = (newCityObj) => {
 // function to retrieve the 5 day forecast weather data
 const getForecast = (lat, lon) => {
 
-    fetch(`http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${openWeatherMapApi}`)
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${openWeatherMapApi}`)
     .then(response => response.json())
     .then(data => {
         displayForecast(data.list);
