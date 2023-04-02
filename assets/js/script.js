@@ -1,9 +1,6 @@
 const openWeatherMapApi = '8dae45263da0f536558e77ad17ba21c3';
 const date = dayjs().format('ddd, MMM D, YYYY H:mm A');
 $('#date').text(`${date}`) // current date
-// const historyBoxEl = $('<div>').attr('id', 'history-btn-container');
-// const clearBtn = $('<button>').attr('id', 'clear-btn').text('Clear History');
-// let searchInputEl = $('#search-input'); 
 
 //  the event listener for the "search" button triggers the function to obtain the latitude and longitude values for the selected city
 const searchBtnClick = (event) => {
@@ -45,7 +42,7 @@ const createNewCityObj = (cityData) => {
 }
 
 
-//  a function that can handle the processing of data in cases where the API returns information for more than one city based on a user-entered city name.
+// a function that can handle the processing of data in cases where the API returns information for more than one city based on a user-entered city name.
 const createMultipleCityList = (multCityData) => {
     console.log(multCityData)
     const multCityList = $('<ul>').attr('id', 'mult-city-list');
@@ -64,7 +61,7 @@ const createMultipleCityList = (multCityData) => {
 };
 
 
-// 
+// function is triggered when the user selects a specific city from the list of multiple city options. It then retrieves the corresponding data for that city and passes it on to the getCurrentWeather() function to obtain weather informationa and save the newly selected city in the local storage
 const multCityListClick = (event) => {
 
     if ( $(event.target).hasClass('mult-city-item') ) {
