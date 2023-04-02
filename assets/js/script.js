@@ -96,7 +96,6 @@ const getCurrentWeather = (newCityObj) => {
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${newCityObj.lat}&lon=${newCityObj.lon}&units=imperial&appid=${openWeatherMapApi}`)
     .then(response => response.json())
     .then(data => {
-        console.log(data)
             
         displayCurrentWeather(data, newCityObj)
         getForecast(newCityObj.lat, newCityObj.lon)
@@ -141,9 +140,9 @@ const displayForecast = (forecastData) => {
 
     const afternoonData = [];
 
-    // for loop is used to extract objects for the upcoming five forecast days with a time of 3:00 PM. At the time when this app was developed, the openweathermap API provided icons with a night theme for forecasted weather occurring at or before 12:00 PM.
+    // for loop is used to extract objects for the upcoming five forecast days with a day themed icon
     forecastData.forEach(element => {       
-        if (dayjs(element.dt_txt).format('HH:mm:ss') === '15:00:00') {
+        if ((dayjs(element.dt_txt).format('HH:mm:ss') === '09:00:00' && element.sys.pod === 'd') || (dayjs(element.dt_txt).format('HH:mm:ss') === '21:00:00' && element.sys.pod === 'd')) {
             afternoonData.push(element);   
         }
     });
