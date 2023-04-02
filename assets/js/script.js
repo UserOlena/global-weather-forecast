@@ -222,7 +222,7 @@ const displayHistoryButtons = () => {
         historyBtn = $('<button>').attr('class', 'history-btn'
         ).data('cityLat', {
             lat: element.lat,
-        }).text(`${element.cityName}, ${element.state}, ${element.country}`
+        }).text(`${element.cityName}, ${element.country}`
         ).insertBefore($('#clear-btn')) ;
     });
 
