@@ -1,6 +1,18 @@
 const openWeatherMapApi = '8dae45263da0f536558e77ad17ba21c3';
-const date = dayjs().format('ddd, MMM D, YYYY H:mm A');
-$('#date').text(`${date}`) // current date
+
+
+// display the current day in the header.
+const displayTime = () => {
+    const date = dayjs().format('ddd, MMM D, YYYY H:mm A');
+    $('#date').text(`${date}`); // current date
+    updateTime();
+}
+
+
+// function triggers displayTime() every second to display real-time changes
+const updateTime = () => {
+    setTimeout(displayTime, 1000);
+}
 
 //  the event listener for the "search" button triggers the function to obtain the latitude and longitude values for the selected city
 const searchBtnClick = (event) => {
@@ -124,7 +136,7 @@ const displayCurrentWeather = (weatherData, newCityObj) => {
 
 // dispaly forecast weather
 const displayForecast = (forecastData) => {
-
+    console.log(forecastData)
     $('#forecast-container').text(''); // to remove previously generated content
 
     const afternoonData = [];
@@ -279,9 +291,11 @@ function clearHistory() {
 
     removeHistoryButtons();
     localStorage.clear();
-};
+}
 
-displayHistoryButtons()
+
+displayHistoryButtons();
+displayTime();
 
 // event listener for the "search" button
 $('#search-btn').click(searchBtnClick);
