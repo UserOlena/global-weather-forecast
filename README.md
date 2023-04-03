@@ -1,5 +1,5 @@
-# Work Day Scheduler
->The Global Weather Forecast was developed as a component of the Berkeley Coding Bootcamp Challenge 5. Users can view current and five-day forecast weather information by entering a city name in the input field. The development of the application was done accordingly to [user story](#user-tory) and [acceptance criteria](#acceptance-criteria).
+# Global Weather Forecast
+>The Global Weather Forecast was developed as a component of the Berkeley Coding Bootcamp Challenge 6. Users can view current and five-day forecast weather information by entering a city name in the input field. The development of the application was done accordingly to [user story](#user-tory) and [acceptance criteria](#acceptance-criteria).
 
 > Live demo [_here_](https://userolena.github.io/global-weather-forecast/).
 
