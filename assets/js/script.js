@@ -125,7 +125,6 @@ $(document).ready(function() {
 
     // dispaly forecast weather
     const displayForecast = (forecastData) => {
-        console.log(forecastData)
         $('#forecast-container').text(''); // to remove previously generated content
 
         const afternoonData = [];
